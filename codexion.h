@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 11:53:17 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/04 17:13:46 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/04 17:45:09 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,11 @@ typedef struct s_heap
 	t_coder	**coders;
 	
 }	t_heap;
+
+//////////////
+//FUNCTIONS
+//////////////
+
+int parse_args(t_master *master, char **argv);
 
 #endif

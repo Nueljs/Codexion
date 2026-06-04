@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 13:45:02 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/04 17:13:09 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/04 17:44:34 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int main (int argc, char **argv)
     {
         printf("Error\n");
     }
-    if (parse_args(&master, argc, argv) != 0)
+    if (parse_args(&master, argv) != 0)
     {
         printf("Error\n");
         return (1);

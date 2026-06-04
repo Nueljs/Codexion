@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 16:56:40 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/04 17:35:50 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/04 17:44:29 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int  is_valid_int(char *str)
     return (1);
 }
 
-int parse_args(t_master *master, int argc, char **argv)
+int parse_args(t_master *master, char **argv)
 {
     if (is_valid_int(argv[1]) == 0)
         return (1);
