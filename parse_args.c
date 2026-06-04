@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   codexion.c                                         :+:      :+:    :+:   */
+/*   parse_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/03 13:45:02 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/04 17:13:09 by macerver         ###   ########.fr       */
+/*   Created: 2026/06/04 16:56:40 by macerver          #+#    #+#             */
+/*   Updated: 2026/06/04 17:35:50 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int main (int argc, char **argv)
+static int  is_valid_int(char *str)
 {
-    t_master    master;
-    if (argc != 9)
+    int i;
+
+    i = 0;
+    while (str[i])
     {
-        printf("Error\n");
+        if (str[i] < '0' || str[i] > '9' )
+        return (0);
+        i++;
     }
-    if (parse_args(&master, argc, argv) != 0)
-    {
-        printf("Error\n");
+    return (1);
+}
+
+int parse_args(t_master *master, int argc, char **argv)
+{
+    if (is_valid_int(argv[1]) == 0)
         return (1);
-    }
-    return (0);
+    else
+        master->number_of_coders = atoi(argv[1]);
 }

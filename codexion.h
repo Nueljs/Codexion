@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 11:53:17 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/03 13:47:00 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/04 17:13:46 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdio.h>
 
 //////////////
-//STRUCTs
+//STRUCTS
 //////////////
 
 typedef struct s_master	t_master;
