@@ -1,35 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   codexion.c                                         :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/03 13:45:02 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/05 16:55:33 by macerver         ###   ########.fr       */
+/*   Created: 2026/06/05 17:30:47 by macerver          #+#    #+#             */
+/*   Updated: 2026/06/05 17:36:22 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-static void	init_master(t_master master)
+long	get_time_ms(void)
 {
-	
-}
+	struct timeval	tv;
 
-int	main(int argc, char **argv)
-{
-	t_master	master;
-
-	if (argc != 9)
-	{
-		printf("Error\n");
-	}
-	if (parse_args(&master, argv) != 0)
-	{
-		printf("Error\n");
-		return (1);
-	}
-	init_master(&master);
-	return (0);
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 10000);
 }

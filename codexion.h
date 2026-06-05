@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 11:53:17 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/04 17:45:09 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/05 17:11:11 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CODEXION_H
 # include <pthread.h>
 # include <stdio.h>
+# include <sys/time.h>
 
 //////////////
 //STRUCTS
@@ -30,12 +31,12 @@ typedef struct s_heap	t_heap;
 
 typedef struct s_coder
 {
-	int					id;
-	long				last_compile_start;
-	int					times_compiled;
-	struct	s_dongle	*l_dongle;
-	struct	s_dongle	*r_dongle;
-	struct	s_master	*master;
+	int				id;
+	long			last_compile_start;
+	int				times_compiled;
+	struct s_dongle	*l_dongle;
+	struct s_dongle	*r_dongle;
+	struct s_master	*master;
 }	t_coder;
 
 //////////////
@@ -75,7 +76,6 @@ typedef struct s_dongle
 	t_heap			*queue;
 }	t_dongle;
 
-
 //////////////
 //HEAP-STRUCT
 //////////////
@@ -85,13 +85,12 @@ typedef struct s_heap
 	int		capacity;
 	int		size;
 	t_coder	**coders;
-	
 }	t_heap;
 
 //////////////
 //FUNCTIONS
 //////////////
 
-int parse_args(t_master *master, char **argv);
+int	parse_args(t_master *master, char **argv);
 
 #endif
