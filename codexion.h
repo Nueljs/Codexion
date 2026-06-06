@@ -91,6 +91,7 @@ typedef struct s_heap
 //FUNCTIONS
 //////////////
 
-int	parse_args(t_master *master, char **argv);
+int		parse_args(t_master *master, char **argv);
+long	get_time_ms(void);
 
 #endif

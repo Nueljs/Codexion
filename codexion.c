@@ -12,9 +12,14 @@
 
 #include "codexion.h"
 
-static void	init_master(t_master master)
+static void	init_master(t_master *master)
 {
-	
+	master->simulation_running = 1;
+	master->start_time = get_time_ms();
+	pthread_mutex_init(&master->log_mutex, NULL);
+	pthread_mutex_init(&master->sim_mutex, NULL);
+	master->coders = malloc(master->number_of_coders * sizeof(t_coder));
+	master->dongles = malloc(master->number_of_coders * sizeof(t_dongle));
 }
 
 int	main(int argc, char **argv)
