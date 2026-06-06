@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 13:45:02 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/06 18:15:59 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/06 18:58:58 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ static void	init_master(t_master *master)
 		master->dongles[i].is_taken = 0;
 		pthread_mutex_init(&master->dongles[i].mutex, NULL);
 		pthread_cond_init(&master->dongles[i].cond, NULL);
+		master->dongles[i].queue = malloc(sizeof(t_heap));
+		master->dongles[i].queue->size = 0;
+		master->dongles[i].queue->capacity = master -> number_of_coders;
+		master->dongles[i].queue->
 		i++;
 	}
 }
