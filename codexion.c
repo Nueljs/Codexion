@@ -12,21 +12,15 @@
 
 #include "codexion.h"
 
-static void	init_master(t_master *master)
+static void	init_coders_and_dongles(t_master *master)
 {
 	int	i;
 	
-	master->simulation_running = 1;
-	master->start_time = get_time_ms();
-	pthread_mutex_init(&master->log_mutex, NULL);
-	pthread_mutex_init(&master->sim_mutex, NULL);
-	master->coders = malloc(master->number_of_coders * sizeof(t_coder));
-	master->dongles = malloc(master->number_of_coders * sizeof(t_dongle));
-	i = 0;
-	while (i < master->number_of_coders)
+	i = -1;
+	while (++i < master->number_of_coders)
 	{
 		master->coders[i].last_compile_start = 0;
-		master->coders[i].master = &master;
+		master->coders[i].master = master;
 		master->coders[i].times_compiled = 0;
 		master->coders[i].id = i + 1;
 		master->dongles[i].id = i + 1;
@@ -37,10 +31,24 @@ static void	init_master(t_master *master)
 		master->dongles[i].queue = malloc(sizeof(t_heap));
 		master->dongles[i].queue->size = 0;
 		master->dongles[i].queue->capacity = master -> number_of_coders;
-		master->dongles[i].queue->
-		i++;
+		master->dongles[i].queue->data = malloc(master->number_of_coders * sizeof(t_coder *));
+		master->coders[i].l_dongle = &master->dongles[(i - 1 + master->number_of_coders) % master->number_of_coders];
+		master->coders[i].r_dongle = &master->dongles[(i + 1) % master->number_of_coders];
 	}
 }
+
+static void	init_master(t_master *master)
+{
+
+	master->simulation_running = 1;
+	master->start_time = get_time_ms();
+	pthread_mutex_init(&master->log_mutex, NULL);
+	pthread_mutex_init(&master->sim_mutex, NULL);
+	master->coders = malloc(master->number_of_coders * sizeof(t_coder));
+	master->dongles = malloc(master->number_of_coders * sizeof(t_dongle));
+	init_coders_and_dongles(master);
+}
+
 int	main(int argc, char **argv)
 {
 	t_master	master;

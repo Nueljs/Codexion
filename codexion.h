@@ -84,7 +84,7 @@ typedef struct s_heap
 {
 	int		capacity;
 	int		size;
-	t_coder	**coders;
+	t_coder	**data;
 }	t_heap;
 
 //////////////
