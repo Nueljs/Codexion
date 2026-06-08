@@ -37,6 +37,7 @@ typedef struct s_coder
 	struct s_dongle	*l_dongle;
 	struct s_dongle	*r_dongle;
 	struct s_master	*master;
+	pthread_t		thread;
 }	t_coder;
 
 //////////////

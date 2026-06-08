@@ -49,6 +49,8 @@ static void	init_master(t_master *master)
 	init_coders_and_dongles(master);
 }
 
+static void	init_thread
+
 int	main(int argc, char **argv)
 {
 	t_master	master;
@@ -63,5 +65,6 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	init_master(&master);
+	init_threads(&master);
 	return (0);
 }
