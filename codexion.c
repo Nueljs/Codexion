@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 13:45:02 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/06 18:58:58 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/11 11:15:00 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,25 @@ static void	init_master(t_master *master)
 	init_coders_and_dongles(master);
 }
 
-static void	init_thread
+static void	init_threads(t_master *master)
+{
+	int	i;
+
+	i = -1;
+	while (++i < master->number_of_coders)
+		pthread_create(&master->coders[i].thread, NULL, coder_routine, &master->coders[i]);
+	pthread_create(&master->monitor_thread, NULL, monitor_routine, master);
+}
+
+static void	join_threads(t_master *master)
+{
+	int	i;
+
+	i = -1;
+	while (++i < master->number_of_coders)
+		pthread_join(master->coders[i].thread, NULL);
+	pthread_join(master->monitor_thread, NULL);
+}
 
 int	main(int argc, char **argv)
 {
@@ -66,5 +84,6 @@ int	main(int argc, char **argv)
 	}
 	init_master(&master);
 	init_threads(&master);
+	join_threads(&master);
 	return (0);
 }

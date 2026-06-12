@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 11:53:17 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/05 17:11:11 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/11 11:24:56 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,5 +94,11 @@ typedef struct s_heap
 
 int		parse_args(t_master *master, char **argv);
 long	get_time_ms(void);
+void	*coder_routine(void *coder);
+void	*monitor_routine(void *monitor);
+void	coder_compile(t_coder *coder);
+void	coder_debug(t_coder *coder);
+void	coder_refactor(t_coder *coder);
+
 
 #endif
