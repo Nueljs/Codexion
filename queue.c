@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   queue.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/13 17:59:16 by macerver          #+#    #+#             */
+/*   Updated: 2026/06/13 17:59:16 by macerver         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "codexion.h"
 
 static void	fifo(t_coder *coder, t_heap *queue)
@@ -16,7 +28,7 @@ static int	calc_deadline(t_coder *coder)
 	deadline = ((coder->last_compile_start == 0)
 		? coder->master->start_time
 		: coder->last_compile_start) +
-		coder->master->timer_to_burnout;
+		coder->master->time_to_burnout;
 	return (deadline);
 }
 

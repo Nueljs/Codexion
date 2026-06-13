@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 15:07:07 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/12 11:33:22 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/13 18:19:02 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	take_dongle(t_dongle *dongle, t_coder *coder)
 {
 	pthread_mutex_lock(&dongle->mutex);
-	enqueue(coder, dongle->heap, coder->master->scheduler);
+	enqueue(coder, dongle->queue, coder->master->scheduler);
 	while (dongle->is_taken)
 		pthread_cond_wait(&coder->cond, &dongle->mutex);
 	dongle->is_taken = 1;
@@ -32,13 +32,12 @@ static int	is_running(t_master *master)
 	pthread_mutex_unlock(&master->sim_mutex);
 	return (running);
 }
-
 static void	release_dongle(t_dongle *dongle)
 {
 	t_coder *next;
 
 	pthread_mutex_lock(&dongle->mutex);
-	next = dequeue(dongle->heap);
+	next = dequeue(dongle->queue);
 	dongle->is_taken = 0;
 	if (next)
 		pthread_cond_signal(&next->cond);
@@ -60,6 +59,7 @@ void	*coder_routine(void *coder)
 			take_dongle(curr_coder->l_dongle, curr_coder);
 		}
 		coder_compile(curr_coder);
+		curr_coder->times_compiled++;
 		release_dongle(curr_coder->l_dongle);
 		release_dongle(curr_coder->r_dongle);
 		coder_debug(curr_coder);

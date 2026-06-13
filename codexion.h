@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 11:53:17 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/11 11:24:56 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/13 18:08:49 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <pthread.h>
 # include <stdio.h>
 # include <sys/time.h>
+# include <string.h>
 
 //////////////
 //STRUCTS
