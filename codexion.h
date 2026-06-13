@@ -37,6 +37,7 @@ typedef struct s_coder
 	struct s_dongle	*l_dongle;
 	struct s_dongle	*r_dongle;
 	struct s_master	*master;
+	pthread_cond_t	cond;
 	pthread_t		thread;
 }	t_coder;
 
@@ -73,7 +74,6 @@ typedef struct s_dongle
 	long			release_time;
 	int				is_taken;
 	pthread_mutex_t	mutex;
-	pthread_cond_t	cond;
 	t_heap			*queue;
 }	t_dongle;
 
@@ -92,13 +92,15 @@ typedef struct s_heap
 //FUNCTIONS
 //////////////
 
-int		parse_args(t_master *master, char **argv);
-long	get_time_ms(void);
-void	*coder_routine(void *coder);
-void	*monitor_routine(void *monitor);
-void	coder_compile(t_coder *coder);
-void	coder_debug(t_coder *coder);
-void	coder_refactor(t_coder *coder);
+int			parse_args(t_master *master, char **argv);
+long		get_time_ms(void);
+void		*coder_routine(void *coder);
+void		*monitor_routine(void *monitor);
+void		coder_compile(t_coder *coder);
+void		coder_debug(t_coder *coder);
+void		coder_refactor(t_coder *coder);
+void		enqueue(t_coder *coder, t_heap *queue, char	*scheduler);
+t_coder    *dequeue(t_heap *queue);
 
 
 #endif

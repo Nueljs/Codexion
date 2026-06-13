@@ -17,17 +17,16 @@ static void	init_coders_and_dongles(t_master *master)
 	int	i;
 	
 	i = -1;
-	while (++i < master->number_of_coders)
-	{
+	while (++i < master->number_of_coders){
 		master->coders[i].last_compile_start = 0;
 		master->coders[i].master = master;
 		master->coders[i].times_compiled = 0;
 		master->coders[i].id = i + 1;
+		pthread_cond_init(&master->coders[i].cond, NULL);
 		master->dongles[i].id = i + 1;
 		master->dongles[i].release_time = 0;
 		master->dongles[i].is_taken = 0;
 		pthread_mutex_init(&master->dongles[i].mutex, NULL);
-		pthread_cond_init(&master->dongles[i].cond, NULL);
 		master->dongles[i].queue = malloc(sizeof(t_heap));
 		master->dongles[i].queue->size = 0;
 		master->dongles[i].queue->capacity = master -> number_of_coders;

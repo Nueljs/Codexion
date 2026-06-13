@@ -12,11 +12,12 @@
 
 #include "codexion.h"
 
-static int	take_dongle(t_dongle *dongle)
+static int	take_dongle(t_dongle *dongle, t_coder *coder)
 {
 	pthread_mutex_lock(&dongle->mutex);
+	enqueue(coder, dongle->heap, coder->master->scheduler);
 	while (dongle->is_taken)
-		pthread_cond_wait(&dongle->cond, &dongle->mutex);
+		pthread_cond_wait(&coder->cond, &dongle->mutex);
 	dongle->is_taken = 1;
 	pthread_mutex_unlock(&dongle->mutex);
 	return (1);
@@ -34,9 +35,13 @@ static int	is_running(t_master *master)
 
 static void	release_dongle(t_dongle *dongle)
 {
+	t_coder *next;
+
 	pthread_mutex_lock(&dongle->mutex);
+	next = dequeue(dongle->heap);
 	dongle->is_taken = 0;
-	pthread_cond_signal(&dongle->cond);
+	if (next)
+		pthread_cond_signal(&next->cond);
 	pthread_mutex_unlock(&dongle->mutex);
 }
 
@@ -47,12 +52,12 @@ void	*coder_routine(void *coder)
 	curr_coder = (t_coder *)coder;
 	while (is_running(curr_coder->master)){
 		if (curr_coder->l_dongle->id < curr_coder->r_dongle->id){
-			take_dongle(curr_coder->l_dongle);
-			take_dongle(curr_coder->r_dongle);
+			take_dongle(curr_coder->l_dongle, curr_coder);
+			take_dongle(curr_coder->r_dongle, curr_coder);
 		}
 		else{
-			take_dongle(curr_coder->r_dongle);
-			take_dongle(curr_coder->l_dongle);
+			take_dongle(curr_coder->r_dongle, curr_coder);
+			take_dongle(curr_coder->l_dongle, curr_coder);
 		}
 		coder_compile(curr_coder);
 		release_dongle(curr_coder->l_dongle);
