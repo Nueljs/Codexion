@@ -39,9 +39,13 @@ static void	release_dongle(t_dongle *dongle)
 	pthread_mutex_lock(&dongle->mutex);
 	next = dequeue(dongle->queue);
 	dongle->is_taken = 0;
-	if (next)
-		pthread_cond_signal(&next->cond);
+	dongle->release_time = get_time_ms();
 	pthread_mutex_unlock(&dongle->mutex);
+	if (next)
+	{
+		usleep(next->master->dongle_cooldown * 1000);
+		pthread_cond_signal(&next->cond);
+	}
 }
 
 void	*coder_routine(void *coder)
@@ -75,20 +79,22 @@ void	*monitor_routine(void *monitor)
 	long		ref;
 	
 	master = (t_master *)monitor;
-	while(is_running(master))
-	{
+	while(is_running(master)){
 		i = -1;
-		while (++i < master->number_of_coders)
-		{
+		while (++i < master->number_of_coders){
 			ref = (master->coders[i].last_compile_start == 0)
 				? master->start_time
 				: master->coders[i].last_compile_start;
-			if(get_time_ms() - ref > master->time_to_burnout)
-			{
+			if(get_time_ms() - ref > master->time_to_burnout){
 				pthread_mutex_lock(&master->sim_mutex);
 				master->simulation_running = 0;
 				pthread_mutex_unlock(&master->sim_mutex);
 			}
+		}
+		if (compiles_counter(master)){
+			pthread_mutex_lock(&master->sim_mutex);
+			master->simulation_running = 0;
+			pthread_mutex_unlock(&master->sim_mutex);
 		}
 		usleep(10000);
 	}

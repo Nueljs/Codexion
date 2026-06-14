@@ -102,6 +102,8 @@ void		coder_debug(t_coder *coder);
 void		coder_refactor(t_coder *coder);
 void		enqueue(t_coder *coder, t_heap *queue, char	*scheduler);
 t_coder    *dequeue(t_heap *queue);
+int			compiles_counter(t_master *master);
+void		cleanup(t_master *master);
 
 
 #endif

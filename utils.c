@@ -19,3 +19,25 @@ long	get_time_ms(void)
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
+
+int	compiles_counter(t_master *master)
+{
+	int	compiles;
+	int	i;
+
+	i = -1;
+	compiles = 0;
+	while (++i < master->number_of_coders)
+	{
+		if (master->coders[i].times_compiled == master->number_of_compiles_required)
+			compiles++;
+	}
+	if (compiles == master->number_of_coders)
+		return (1);
+	return (0);
+}
+
+void	cleanup(t_master *master)
+{
+	
+}

@@ -84,5 +84,6 @@ int	main(int argc, char **argv)
 	init_master(&master);
 	init_threads(&master);
 	join_threads(&master);
+	cleanup(&master);
 	return (0);
 }
