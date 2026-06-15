@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:59:16 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/13 17:59:16 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/15 18:10:07 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ t_coder    *dequeue(t_heap *queue)
     int i;
 	t_coder	*coder;
 
+	if (queue->size == 0)
+		return (NULL);
     i = 0;
 	coder = queue->data[i];
     while (++i < queue->size)

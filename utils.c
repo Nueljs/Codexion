@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 17:30:47 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/05 17:52:03 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/15 18:38:51 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	compiles_counter(t_master *master)
 	compiles = 0;
 	while (++i < master->number_of_coders)
 	{
+		printf("coder %d: %d compilaciones\n", master->coders[i].id, master->coders[i].times_compiled);
 		if (master->coders[i].times_compiled == master->number_of_compiles_required)
 			compiles++;
 	}
@@ -39,5 +40,18 @@ int	compiles_counter(t_master *master)
 
 void	cleanup(t_master *master)
 {
-	
+	int	i;
+
+	i = -1;
+	while(++i < master->number_of_coders)
+	{
+		free(master->dongles[i].queue->data);
+		free(master->dongles[i].queue);
+		pthread_mutex_destroy(&master->dongles[i].mutex);
+		pthread_cond_destroy(&master->coders[i].cond);
+	}
+	free(master->coders);
+	free(master->dongles);
+	pthread_mutex_destroy(&master->log_mutex);
+	pthread_mutex_destroy(&master->sim_mutex);
 }

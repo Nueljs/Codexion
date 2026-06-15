@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 15:07:07 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/13 18:19:02 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/15 18:40:26 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,12 @@
 static int	take_dongle(t_dongle *dongle, t_coder *coder)
 {
 	pthread_mutex_lock(&dongle->mutex);
-	enqueue(coder, dongle->queue, coder->master->scheduler);
-	while (dongle->is_taken)
-		pthread_cond_wait(&coder->cond, &dongle->mutex);
+	if (dongle->is_taken)
+	{
+		enqueue(coder, dongle->queue, coder->master->scheduler);
+		while (dongle->is_taken)
+			pthread_cond_wait(&coder->cond, &dongle->mutex);
+	}
 	dongle->is_taken = 1;
 	pthread_mutex_unlock(&dongle->mutex);
 	return (1);
@@ -86,12 +89,14 @@ void	*monitor_routine(void *monitor)
 				? master->start_time
 				: master->coders[i].last_compile_start;
 			if(get_time_ms() - ref > master->time_to_burnout){
+				printf("BURNOUT coder %d\n", master->coders[i].id);
 				pthread_mutex_lock(&master->sim_mutex);
 				master->simulation_running = 0;
 				pthread_mutex_unlock(&master->sim_mutex);
 			}
 		}
 		if (compiles_counter(master)){
+			printf("COMPILES DONE\n");
 			pthread_mutex_lock(&master->sim_mutex);
 			master->simulation_running = 0;
 			pthread_mutex_unlock(&master->sim_mutex);

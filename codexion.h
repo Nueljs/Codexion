@@ -6,16 +6,18 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 11:53:17 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/13 18:08:49 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/15 17:45:03 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CODEXION_H
 # define CODEXION_H
 # include <pthread.h>
+# include <unistd.h>
 # include <stdio.h>
 # include <sys/time.h>
 # include <string.h>
+# include <stdlib.h>
 
 //////////////
 //STRUCTS
