@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 15:07:07 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/16 17:41:54 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/16 17:58:07 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ static int	take_dongle(t_dongle *dongle, t_coder *coder)
 		enqueue(coder, dongle->queue, coder->master->scheduler);
 		while (dongle->is_taken)
 			pthread_cond_wait(&coder->cond, &dongle->mutex);
+		if (!is_running(coder->master))
+		{
+			pthread_mutex_unlock(&dongle->mutex);
+			return (0);
+		}
 	}
 	dongle->is_taken = 1;
 	pthread_mutex_unlock(&dongle->mutex);

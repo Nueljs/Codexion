@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 12:26:26 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/16 17:44:32 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/16 18:02:00 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	coder_compile(t_coder *coder)
 {
+	if (!is_running(coder->master))
+		return ;
 	pthread_mutex_lock(&coder->master->log_mutex);
 	printf("%ld %d is compiling\n", (get_time_ms() - coder->master->start_time), coder->id);
 	pthread_mutex_unlock(&coder->master->log_mutex);

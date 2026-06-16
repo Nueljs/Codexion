@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 17:30:47 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/16 17:17:32 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/16 18:14:13 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	compiles_counter(t_master *master)
 	while (++i < master->number_of_coders)
 	{
 		printf("coder %d: %d compilaciones\n", master->coders[i].id, master->coders[i].times_compiled);
-		if (master->coders[i].times_compiled == master->number_of_compiles_required)
+		if (master->coders[i].times_compiled >= master->number_of_compiles_required)
 			compiles++;
 	}
 	if (compiles == master->number_of_coders)
