@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 11:53:17 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/15 17:45:03 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/16 17:42:06 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void		enqueue(t_coder *coder, t_heap *queue, char	*scheduler);
 t_coder    *dequeue(t_heap *queue);
 int			compiles_counter(t_master *master);
 void		cleanup(t_master *master);
-
+void		stop_simulation(t_master *master);
+int			is_running(t_master *master);
 
 #endif

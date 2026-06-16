@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 15:07:07 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/15 18:40:26 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/16 17:41:54 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	take_dongle(t_dongle *dongle, t_coder *coder)
 	return (1);
 }
 
-static int	is_running(t_master *master)
+int	is_running(t_master *master)
 {
 	int	running;
 
@@ -91,14 +91,14 @@ void	*monitor_routine(void *monitor)
 			if(get_time_ms() - ref > master->time_to_burnout){
 				printf("BURNOUT coder %d\n", master->coders[i].id);
 				pthread_mutex_lock(&master->sim_mutex);
-				master->simulation_running = 0;
+				stop_simulation(master);
 				pthread_mutex_unlock(&master->sim_mutex);
 			}
 		}
 		if (compiles_counter(master)){
 			printf("COMPILES DONE\n");
 			pthread_mutex_lock(&master->sim_mutex);
-			master->simulation_running = 0;
+			stop_simulation(master);
 			pthread_mutex_unlock(&master->sim_mutex);
 		}
 		usleep(10000);

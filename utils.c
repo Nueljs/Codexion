@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 17:30:47 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/15 18:38:51 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/16 17:17:32 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,14 @@ void	cleanup(t_master *master)
 	free(master->dongles);
 	pthread_mutex_destroy(&master->log_mutex);
 	pthread_mutex_destroy(&master->sim_mutex);
+}
+
+void	stop_simulation(t_master *master)
+{
+	int	i;
+
+	i = -1;
+	master->simulation_running = 0;
+	while (++i < master->number_of_coders)
+		pthread_cond_broadcast(&master->coders[i].cond);
 }
