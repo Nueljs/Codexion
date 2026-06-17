@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routines.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: manuel <manuel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 15:07:07 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/16 17:58:07 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/17 06:13:51 by manuel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	*coder_routine(void *coder)
 	t_coder	*curr_coder;
 
 	curr_coder = (t_coder *)coder;
-	while (is_running(curr_coder->master)){
+	while (curr_coder->times_compiled < curr_coder->master->number_of_compiles_required){
 		if (curr_coder->l_dongle->id < curr_coder->r_dongle->id){
 			take_dongle(curr_coder->l_dongle, curr_coder);
 			take_dongle(curr_coder->r_dongle, curr_coder);
