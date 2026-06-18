@@ -6,7 +6,7 @@
 /*   By: manuel <manuel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 15:07:07 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/17 06:13:51 by manuel           ###   ########.fr       */
+/*   Updated: 2026/06/18 03:40:12 by manuel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ static int	take_dongle(t_dongle *dongle, t_coder *coder)
 			return (0);
 		}
 	}
+	pthread_mutex_lock(&coder->master->log_mutex);
+	printf("%ld %d has taken a dongle\n", (get_time_ms() - coder->master->start_time), coder->id);
+	pthread_mutex_unlock(&coder->master->log_mutex);
 	dongle->is_taken = 1;
 	pthread_mutex_unlock(&dongle->mutex);
 	return (1);
@@ -61,7 +64,8 @@ void	*coder_routine(void *coder)
 	t_coder	*curr_coder;
 
 	curr_coder = (t_coder *)coder;
-	while (curr_coder->times_compiled < curr_coder->master->number_of_compiles_required){
+	while (curr_coder->times_compiled < curr_coder->master->number_of_compiles_required &&
+		curr_coder->master->simulation_running){
 		if (curr_coder->l_dongle->id < curr_coder->r_dongle->id){
 			take_dongle(curr_coder->l_dongle, curr_coder);
 			take_dongle(curr_coder->r_dongle, curr_coder);
@@ -94,14 +98,12 @@ void	*monitor_routine(void *monitor)
 				? master->start_time
 				: master->coders[i].last_compile_start;
 			if(get_time_ms() - ref > master->time_to_burnout){
-				printf("BURNOUT coder %d\n", master->coders[i].id);
 				pthread_mutex_lock(&master->sim_mutex);
 				stop_simulation(master);
 				pthread_mutex_unlock(&master->sim_mutex);
 			}
 		}
 		if (compiles_counter(master)){
-			printf("COMPILES DONE\n");
 			pthread_mutex_lock(&master->sim_mutex);
 			stop_simulation(master);
 			pthread_mutex_unlock(&master->sim_mutex);

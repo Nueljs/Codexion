@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: manuel <manuel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 17:30:47 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/16 18:14:13 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/18 03:22:18 by manuel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int	compiles_counter(t_master *master)
 	compiles = 0;
 	while (++i < master->number_of_coders)
 	{
-		printf("coder %d: %d compilaciones\n", master->coders[i].id, master->coders[i].times_compiled);
 		if (master->coders[i].times_compiled >= master->number_of_compiles_required)
 			compiles++;
 	}
