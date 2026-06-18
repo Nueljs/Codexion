@@ -6,7 +6,7 @@
 /*   By: manuel <manuel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:59:16 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/17 06:10:36 by manuel           ###   ########.fr       */
+/*   Updated: 2026/06/18 05:12:55 by manuel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ static void	fifo(t_coder *coder, t_heap *queue)
 	queue->size++;
 }
 
-static int	calc_deadline(t_coder *coder)
+static long	calc_deadline(t_coder *coder)
 {
-	int	deadline;
+	long	deadline;
 
 	deadline = ((coder->last_compile_start == 0)
 		? coder->master->start_time
