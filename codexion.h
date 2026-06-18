@@ -6,7 +6,7 @@
 /*   By: manuel <manuel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 11:53:17 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/17 06:10:36 by manuel           ###   ########.fr       */
+/*   Updated: 2026/06/18 04:54:52 by manuel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,6 @@ int			compiles_counter(t_master *master);
 void		cleanup(t_master *master);
 void		stop_simulation(t_master *master);
 int			is_running(t_master *master);
+void		burnout(t_coder *coder);
 
 #endif

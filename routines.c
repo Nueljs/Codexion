@@ -6,7 +6,7 @@
 /*   By: manuel <manuel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 15:07:07 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/18 03:40:12 by manuel           ###   ########.fr       */
+/*   Updated: 2026/06/18 05:04:16 by manuel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,28 @@
 
 static int	take_dongle(t_dongle *dongle, t_coder *coder)
 {
+	long	wait;
+
+	wait = dongle->release_time + coder->master->dongle_cooldown - get_time_ms();
 	pthread_mutex_lock(&dongle->mutex);
 	if (dongle->is_taken)
 	{
 		enqueue(coder, dongle->queue, coder->master->scheduler);
-		while (dongle->is_taken)
+		while (dongle->is_taken && is_running(coder->master))
 			pthread_cond_wait(&coder->cond, &dongle->mutex);
 		if (!is_running(coder->master))
 		{
 			pthread_mutex_unlock(&dongle->mutex);
 			return (0);
 		}
+		if (wait)
+			usleep(wait * 1000);
 	}
+	dongle->is_taken = 1;
+	pthread_mutex_unlock(&dongle->mutex);
 	pthread_mutex_lock(&coder->master->log_mutex);
 	printf("%ld %d has taken a dongle\n", (get_time_ms() - coder->master->start_time), coder->id);
 	pthread_mutex_unlock(&coder->master->log_mutex);
-	dongle->is_taken = 1;
-	pthread_mutex_unlock(&dongle->mutex);
 	return (1);
 }
 
@@ -53,10 +58,7 @@ static void	release_dongle(t_dongle *dongle)
 	dongle->release_time = get_time_ms();
 	pthread_mutex_unlock(&dongle->mutex);
 	if (next)
-	{
-		usleep(next->master->dongle_cooldown * 1000);
 		pthread_cond_signal(&next->cond);
-	}
 }
 
 void	*coder_routine(void *coder)
@@ -65,7 +67,7 @@ void	*coder_routine(void *coder)
 
 	curr_coder = (t_coder *)coder;
 	while (curr_coder->times_compiled < curr_coder->master->number_of_compiles_required &&
-		curr_coder->master->simulation_running){
+		is_running(curr_coder->master)){
 		if (curr_coder->l_dongle->id < curr_coder->r_dongle->id){
 			take_dongle(curr_coder->l_dongle, curr_coder);
 			take_dongle(curr_coder->r_dongle, curr_coder);
@@ -98,9 +100,7 @@ void	*monitor_routine(void *monitor)
 				? master->start_time
 				: master->coders[i].last_compile_start;
 			if(get_time_ms() - ref > master->time_to_burnout){
-				pthread_mutex_lock(&master->sim_mutex);
-				stop_simulation(master);
-				pthread_mutex_unlock(&master->sim_mutex);
+				burnout(&master->coders[i]);
 			}
 		}
 		if (compiles_counter(master)){

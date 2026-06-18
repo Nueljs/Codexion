@@ -6,7 +6,7 @@
 /*   By: manuel <manuel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 17:30:47 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/18 03:22:18 by manuel           ###   ########.fr       */
+/*   Updated: 2026/06/18 04:57:06 by manuel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,15 @@ void	stop_simulation(t_master *master)
 	master->simulation_running = 0;
 	while (++i < master->number_of_coders)
 		pthread_cond_broadcast(&master->coders[i].cond);
+}
+
+void	burnout(t_coder *coder)
+{
+	pthread_mutex_lock(&coder->master->log_mutex);
+	printf("%ld %d burned out\n", (get_time_ms() - 
+		coder->master->start_time), coder->id);
+	pthread_mutex_unlock(&coder->master->log_mutex);
+	pthread_mutex_lock(&coder->master->sim_mutex);
+	stop_simulation(coder->master);
+	pthread_mutex_unlock(&coder->master->sim_mutex);
 }
