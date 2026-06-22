@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manuel <manuel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/05 17:30:47 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/18 04:57:06 by manuel           ###   ########.fr       */
+/*   Created: 2026/06/19 17:57:24 by macerver          #+#    #+#             */
+/*   Updated: 2026/06/21 11:16:06 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+void	assign_ticket(t_coder *coder)
+{
+	pthread_mutex_lock(&coder->master->ticket_mutex);
+	coder->ticket_number = coder->master->ticket_counter;
+	coder->master->ticket_counter++;
+	pthread_mutex_unlock(&coder->master->ticket_mutex);
+}
+
+
+long	get_priority(t_coder *coder, char *scheduler)
+{
+	if (strcmp(scheduler, "edf") == 0)
+		return (coder->deadline);
+	else if (strcmp(scheduler, "fifo") == 0)
+		return (coder->ticket_number);
+	return (0);
+}
 
 long	get_time_ms(void)
 {
@@ -18,41 +36,6 @@ long	get_time_ms(void)
 
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-}
-
-int	compiles_counter(t_master *master)
-{
-	int	compiles;
-	int	i;
-
-	i = -1;
-	compiles = 0;
-	while (++i < master->number_of_coders)
-	{
-		if (master->coders[i].times_compiled >= master->number_of_compiles_required)
-			compiles++;
-	}
-	if (compiles == master->number_of_coders)
-		return (1);
-	return (0);
-}
-
-void	cleanup(t_master *master)
-{
-	int	i;
-
-	i = -1;
-	while(++i < master->number_of_coders)
-	{
-		free(master->dongles[i].queue->data);
-		free(master->dongles[i].queue);
-		pthread_mutex_destroy(&master->dongles[i].mutex);
-		pthread_cond_destroy(&master->coders[i].cond);
-	}
-	free(master->coders);
-	free(master->dongles);
-	pthread_mutex_destroy(&master->log_mutex);
-	pthread_mutex_destroy(&master->sim_mutex);
 }
 
 void	stop_simulation(t_master *master)
@@ -65,13 +48,12 @@ void	stop_simulation(t_master *master)
 		pthread_cond_broadcast(&master->coders[i].cond);
 }
 
-void	burnout(t_coder *coder)
+int	is_running(t_master *master)
 {
-	pthread_mutex_lock(&coder->master->log_mutex);
-	printf("%ld %d burned out\n", (get_time_ms() - 
-		coder->master->start_time), coder->id);
-	pthread_mutex_unlock(&coder->master->log_mutex);
-	pthread_mutex_lock(&coder->master->sim_mutex);
-	stop_simulation(coder->master);
-	pthread_mutex_unlock(&coder->master->sim_mutex);
+	int	running;
+
+	pthread_mutex_lock(&master->sim_mutex);
+	running = master->simulation_running;
+	pthread_mutex_unlock(&master->sim_mutex);
+	return (running);
 }

@@ -6,7 +6,7 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 13:45:02 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/15 17:46:42 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/21 13:26:14 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,17 @@ static void	init_coders_and_dongles(t_master *master)
 	int	i;
 	
 	i = -1;
-	while (++i < master->number_of_coders){
-		master->coders[i].last_compile_start = 0;
-		master->coders[i].master = master;
-		master->coders[i].times_compiled = 0;
+	while (++i < master->number_of_coders)
+	{
 		master->coders[i].id = i + 1;
+		master->coders[i].last_compile_start = 0;
+		master->coders[i].ticket_number = 0;
+		master->coders[i].deadline = master->start_time + master->time_to_burnout;
+		master->coders[i].times_compiled = 0;
+		master->coders[i].master = master;
 		pthread_cond_init(&master->coders[i].cond, NULL);
 		master->dongles[i].id = i + 1;
-		master->dongles[i].release_time = 0;
+		master->dongles[i].available_at = 0;
 		master->dongles[i].is_taken = 0;
 		pthread_mutex_init(&master->dongles[i].mutex, NULL);
 		master->dongles[i].queue = malloc(sizeof(t_heap));
@@ -41,6 +44,8 @@ static void	init_master(t_master *master)
 
 	master->simulation_running = 1;
 	master->start_time = get_time_ms();
+	master->ticket_counter = 0;
+	pthread_mutex_init(&master->ticket_mutex, NULL);
 	pthread_mutex_init(&master->log_mutex, NULL);
 	pthread_mutex_init(&master->sim_mutex, NULL);
 	master->coders = malloc(master->number_of_coders * sizeof(t_coder));
@@ -83,6 +88,11 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	init_master(&master);
+	if (master.number_of_compiles_required == 0)
+	{
+		cleanup(&master);
+		return (0);
+	}
 	init_threads(&master);
 	join_threads(&master);
 	cleanup(&master);

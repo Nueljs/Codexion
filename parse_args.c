@@ -6,11 +6,30 @@
 /*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 16:56:40 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/05 16:42:17 by macerver         ###   ########.fr       */
+/*   Updated: 2026/06/21 11:25:48 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+void	cleanup(t_master *master)
+{
+	int	i;
+
+	i = -1;
+	while (++i < master->number_of_coders)
+	{
+		free(master->dongles[i].queue->data);
+		free(master->dongles[i].queue);
+		pthread_mutex_destroy(&master->dongles[i].mutex);
+		pthread_cond_destroy(&master->coders[i].cond);
+	}
+	free(master->coders);
+	free(master->dongles);
+	pthread_mutex_destroy(&master->log_mutex);
+	pthread_mutex_destroy(&master->sim_mutex);
+	pthread_mutex_destroy(&master->ticket_mutex);
+}
 
 static int	is_valid_int(char *str)
 {

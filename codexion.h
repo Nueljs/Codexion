@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manuel <manuel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: macerver <macerver@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 11:53:17 by macerver          #+#    #+#             */
-/*   Updated: 2026/06/18 04:54:52 by manuel           ###   ########.fr       */
+/*   Updated: 2026/06/21 11:34:02 by macerver         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,12 @@ typedef struct s_coder
 {
 	int				id;
 	long			last_compile_start;
+	long			ticket_number;
+	long			deadline;
 	int				times_compiled;
-	struct s_dongle	*l_dongle;
-	struct s_dongle	*r_dongle;
-	struct s_master	*master;
+	t_dongle		*l_dongle;
+	t_dongle		*r_dongle;
+	t_master		*master;
 	pthread_cond_t	cond;
 	pthread_t		thread;
 }	t_coder;
@@ -60,6 +62,8 @@ typedef struct s_master
 	char			*scheduler;
 	int				simulation_running;
 	long			start_time;
+	long			ticket_counter;
+	pthread_mutex_t	ticket_mutex;
 	pthread_mutex_t	log_mutex;
 	pthread_mutex_t	sim_mutex;
 	t_coder			*coders;
@@ -74,7 +78,7 @@ typedef struct s_master
 typedef struct s_dongle
 {
 	int				id;
-	long			release_time;
+	long			available_at;
 	int				is_taken;
 	pthread_mutex_t	mutex;
 	t_heap			*queue;
@@ -96,16 +100,17 @@ typedef struct s_heap
 //////////////
 
 int			parse_args(t_master *master, char **argv);
+void		cleanup(t_master *master);
 long		get_time_ms(void);
+void    	assign_ticket(t_coder *coder);
+long    	get_priority(t_coder *coder, char *scheduler);
+void    	heap_push(t_heap *heap, t_coder *coder, char *scheduler);
+t_coder		*heap_pop(t_heap *heap, char *scheduler);
 void		*coder_routine(void *coder);
 void		*monitor_routine(void *monitor);
 void		coder_compile(t_coder *coder);
 void		coder_debug(t_coder *coder);
 void		coder_refactor(t_coder *coder);
-void		enqueue(t_coder *coder, t_heap *queue, char	*scheduler);
-t_coder    *dequeue(t_heap *queue);
-int			compiles_counter(t_master *master);
-void		cleanup(t_master *master);
 void		stop_simulation(t_master *master);
 int			is_running(t_master *master);
 void		burnout(t_coder *coder);
